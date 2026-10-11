@@ -1,14 +1,6 @@
 (function () {
   "use strict";
 
-  /* ------------------------------------------------------------------
-     SETTINGS
-     ADMIN_HASH is a fingerprint of "weden-cup|username|password".
-     To change the login: open admin.html, open the browser console and run
-         wedenHash("newUsername", "newPassword")
-     then paste the printed value below.
-     Current login: username "admin", password "weden2026" (change it!)
-  ------------------------------------------------------------------ */
   var CONFIG = {
     ADMIN_HASH: "9f3f8455c0be70477da9dca326d7c0f233deb857dd4a814af42b68d34fcf17f2",
     SALT: "weden-cup",
@@ -31,7 +23,6 @@
   var boardEl = $("board");
   var titleEl = $("title");
 
-  /* ---------- helpers ---------- */
   function clone(o) { return JSON.parse(JSON.stringify(o)); }
   function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 7); }
   function esc(s) {
@@ -62,7 +53,6 @@
     };
   }
 
-  /* ---------- storage ---------- */
   function fetchLive() {
     return new Promise(function (resolve, reject) {
       try { delete window.WEDEN_DATA; } catch (e) { window.WEDEN_DATA = undefined; }
@@ -95,7 +85,6 @@
     try { localStorage.setItem(CONFIG.DRAFT_KEY, JSON.stringify(state)); } catch (e) {}
   }
 
-  /* ---------- ranking ---------- */
   function sorted() {
     return state.players
       .map(function (p, i) { return { p: p, i: i }; })
@@ -110,7 +99,6 @@
     return mix(from[0], to[0], t) + "," + mix(from[1], to[1], t) + "," + mix(from[2], to[2], t);
   }
 
-  /* ---------- rendering ---------- */
   function render() {
     var editing = isEditing();
     document.body.classList.toggle("editing", editing);
@@ -156,13 +144,11 @@
     }).join("");
   }
 
-  /* ---------- background stars (steady upward drift + sway + twinkle) ---------- */
   (function stars() {
     var sky = $("sky");
     for (var i = 0; i < 42; i++) {
       var s = document.createElement("div");
       var size = [3, 3, 4, 6, 9, 12][Math.floor(Math.random() * 6)];
-      // seconds to cross the screen: bigger = slower. Larger stars move a bit faster.
       var rise = 90 - size * 3 - Math.random() * 20;
       s.className = "star" + (Math.random() < 0.35 ? " purple" : "");
       s.style.width = s.style.height = size + "px";
@@ -177,7 +163,7 @@
     }
   })();
 
-  /* ---------- public page: load + auto refresh ---------- */
+
   function startPublic() {
     function pull(first) {
       fetchLive().then(applyLive).catch(function (err) {
@@ -188,7 +174,7 @@
     setInterval(function () { pull(false); }, CONFIG.REFRESH_MS);
   }
 
-  /* ---------- admin page ---------- */
+
   function sha256(text) {
     return crypto.subtle.digest("SHA-256", new TextEncoder().encode(text)).then(function (buf) {
       return Array.prototype.map.call(new Uint8Array(buf), function (b) {
@@ -240,12 +226,10 @@
       return credHash(user, pass).then(function (h) { console.log(h); return h; });
     };
 
-    /* data: draft first, otherwise the live file */
     var draft = loadDraft();
     if (draft) { state = draft; loaded = true; render(); }
     else { fetchLive().then(applyLive).catch(showLoadError); }
 
-    /* login */
     var loginBtn = $("loginBtn"), loginErr = $("loginErr");
     function tryLogin() {
       if (!window.crypto || !crypto.subtle) {
@@ -282,7 +266,6 @@
     try { remembered = sessionStorage.getItem(CONFIG.SESSION_KEY) === "1"; } catch (e) {}
     setLoggedIn(remembered);
 
-    /* title */
     titleEl.addEventListener("input", function () {
       if (!isEditing()) return;
       state.title = titleEl.textContent.trim().slice(0, 24) || "1K ROBUX";
@@ -292,7 +275,6 @@
       if (e.key === "Enter") { e.preventDefault(); titleEl.blur(); }
     });
 
-    /* row actions */
     boardEl.addEventListener("click", function (e) {
       if (!isEditing()) return;
       var btn = e.target.closest("[data-act]");
@@ -332,7 +314,6 @@
       });
     });
 
-    /* add player dialog */
     var dlg = $("dlg"), newName = $("newName"), newPoints = $("newPoints"),
         newPreview = $("newPreview"), err = $("err");
 
@@ -371,7 +352,6 @@
       }
     });
 
-    /* publish / discard */
     $("downloadBtn").addEventListener("click", function () {
       var text = "window.WEDEN_DATA = " + JSON.stringify(state, null, 2) + ";\n";
       var blob = new Blob([text], { type: "text/javascript" });
@@ -390,6 +370,5 @@
     });
   }
 
-  /* ---------- start ---------- */
   if (isAdminPage) startAdmin(); else startPublic();
 })();

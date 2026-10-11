@@ -26,7 +26,7 @@ body {
 
 [hidden] { display: none !important; }
 
-/* ---------- Background ---------- */
+/* Backgrounds Section */
 .sky {
   position: fixed;
   inset: 0;
@@ -39,7 +39,6 @@ body {
   top: 0;
   background: #fff;
   opacity: 0.6;
-  /* steady upward drift + small sideways sway + twinkle */
   animation:
     rise var(--rise, 60s) linear infinite,
     sway var(--sway, 9s) ease-in-out infinite alternate,
@@ -61,7 +60,7 @@ body {
   50% { opacity: 0.85; }
 }
 
-/* ---------- Layout ---------- */
+/* Layout Section */
 .page {
   position: relative;
   z-index: 1;
@@ -70,7 +69,6 @@ body {
   padding: 8px 16px 120px;
 }
 
-/* Header: logo column | title | spacer column, so they can never overlap */
 .top {
   position: relative;
   z-index: 1;
@@ -111,7 +109,7 @@ body {
 }
 body.editing .title { cursor: text; border-bottom: 3px dashed rgba(255, 255, 255, 0.5); }
 
-/* ---------- Leaderboard rows ---------- */
+/* Leaderboard Section */
 .board {
   list-style: none;
   padding: 0;
@@ -175,7 +173,6 @@ body.editing .row-tools { display: flex; }
   background: rgba(61, 15, 120, var(--row-alpha));
 }
 
-/* ---------- Form controls ---------- */
 .field {
   font-family: var(--pixel);
   font-size: 20px;
@@ -214,7 +211,6 @@ body.editing .row-tools { display: flex; }
 
 .error { color: #ffb4ab; font-size: 18px; min-height: 22px; margin-top: 8px; }
 
-/* ---------- Admin: login card ---------- */
 .login-card {
   max-width: 420px;
   margin: clamp(24px, 5vw, 48px) auto 0;
@@ -227,7 +223,6 @@ body.editing .row-tools { display: flex; }
 .login-card label { display: block; margin: 12px 0 4px; font-size: 20px; }
 .login-card .btn.primary { margin-top: 12px; font-size: 20px; padding: 8px 18px; }
 
-/* ---------- Admin: dock + notes ---------- */
 .dock {
   position: fixed;
   right: 16px;
@@ -252,7 +247,6 @@ body.editing .row-tools { display: flex; }
   background: rgba(0, 0, 0, 0.45);
 }
 
-/* ---------- Add player dialog ---------- */
 dialog {
   border: 4px solid #fff;
   background: var(--panel);
@@ -282,7 +276,6 @@ dialog label { display: block; margin: 12px 0 4px; font-size: 20px; }
 .dlg-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; }
 .dlg-actions .btn.primary { font-size: 20px; padding: 8px 16px; }
 
-/* ---------- Small screens ---------- */
 @media (max-width: 640px) {
   .row { grid-template-columns: 40px 64px 1fr; }
   .row-tools { grid-column: 1 / -1; justify-content: flex-start; }
